@@ -229,8 +229,6 @@ func (c *Client) readLoop() {
 
 		if err != nil {
 			c.Fatalf("Error reading from the connection: %v", err)
-			c.Disconnect()
-			go c.Connect()
 			return
 		}
 		c.handlePacket(packet)

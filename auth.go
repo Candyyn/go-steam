@@ -1,7 +1,6 @@
 package steam
 
 import (
-	"fmt"
 	"sync/atomic"
 	"time"
 
@@ -92,9 +91,6 @@ func (a *Auth) HandlePacket(packet *protocol.Packet) {
 	case steamlang.EMsg_ClientSessionToken:
 	case steamlang.EMsg_ClientLoggedOff:
 		a.handleLoggedOff(packet)
-	case steamlang.EMsg_ClientUpdateMachineAuth:
-		fmt.Println("TODO: handle steamlang.EMsg_ClientUpdateMachineAuth")
-		// a.handleUpdateMachineAuth(packet)
 	case steamlang.EMsg_ClientAccountInfo:
 		a.handleAccountInfo(packet)
 	}
@@ -170,23 +166,6 @@ func (a *Auth) handleLoggedOff(packet *protocol.Packet) {
 	}
 	a.client.Emit(&LoggedOffEvent{Result: result})
 }
-
-// TODO: Need to generate message proto type
-// func (a *Auth) handleUpdateMachineAuth(packet *protocol.Packet) {
-// 	body := new(protobuf.CMsgClientUpdateMachineAuth)
-// 	packet.ReadProtoMsg(body)
-// 	hash := sha1.New()
-// 	hash.Write(packet.Data)
-// 	sha := hash.Sum(nil)
-
-// 	msg := protocol.NewClientMsgProtobuf(steamlang.EMsg_ClientUpdateMachineAuthResponse, &protobuf.CMsgClientUpdateMachineAuthResponse{
-// 		ShaFile: sha,
-// 	})
-// 	msg.SetTargetJobId(packet.SourceJobId)
-// 	a.client.Write(msg)
-
-// 	a.client.Emit(&MachineAuthUpdateEvent{sha})
-// }
 
 func (a *Auth) handleAccountInfo(packet *protocol.Packet) {
 	body := new(protobuf.CMsgClientAccountInfo)
